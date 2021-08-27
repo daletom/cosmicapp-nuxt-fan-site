@@ -14,7 +14,7 @@ Each item you add in the homes bucket will reflect a different section you can c
 
 These sections have very limited info needed. Just a title and an image. Their names are important, because this will become the routes for each section in your nuxt app that you will be updating. 
 
-<img src="https://tom.imgix.net/cosmic_home_bucket.png?h=450&auto=format">
+<img src="https://tom.imgix.net/cosmic_homes_bucket.png?h=450&auto=format">
 
 You will now want to create Cosmic buckets for each section you made.  In the template, you already have the three I created, episodes, heroes, and homes.  But you may want to edit or add additional ones. These buckets will allow you to add content to each of those sections you started creating.
 
