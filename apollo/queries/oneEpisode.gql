@@ -1,0 +1,17 @@
+query getObjects($slug: String!){
+    getObjects(
+        bucket_slug: "",
+        read_key: "",
+        input: {
+            query: { slug: $slug }
+            }
+    ) {
+		objects {
+            id
+			content
+			title
+            metadata
+            slug
+		}
+    }
+}

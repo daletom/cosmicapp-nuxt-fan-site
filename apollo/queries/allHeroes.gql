@@ -1,0 +1,17 @@
+{
+    getObjects(
+        bucket_slug: "",
+        read_key: "",
+        input: {
+            query: { type: "" }
+            }
+    ) {
+		objects {
+            id
+			content
+			title
+            metadata
+            slug
+		}
+    }
+}
