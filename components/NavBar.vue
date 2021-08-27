@@ -12,8 +12,8 @@
         <div class="hidden sm:block sm:ml-6">
           <div class="flex">
             <div class="relative flex ml-0">
-              <nuxt-link to="/section1" href="#" class="px-3 py-2 rounded-md text-3xl font-h2 font-medium leading-5 text-white hover:underline focus:outline-none transition duration-150 ease-in-out group link-style">Section 1</nuxt-link>
-              <nuxt-link to="/section2" href="#" class="px-3 py-2 rounded-md text-3xl font-h2 font-medium leading-5 text-white hover:underline focus:outline-none transition duration-150 ease-in-out group link-style">Section 2</nuxt-link>
+              <nuxt-link to="/Episodes" href="#" class="px-3 py-2 rounded-md text-3xl font-h2 font-medium leading-5 text-white hover:underline focus:outline-none transition duration-150 ease-in-out group link-style">Section 1</nuxt-link>
+              <nuxt-link to="/Lokis" href="#" class="px-3 py-2 rounded-md text-3xl font-h2 font-medium leading-5 text-white hover:underline focus:outline-none transition duration-150 ease-in-out group link-style">Section 2</nuxt-link>
               <nuxt-link to="/about" href="#" class="px-3 py-2 rounded-md text-3xl font-h2 font-medium leading-5 text-white hover:underline focus:outline-none transition duration-150 ease-in-out group link-style">About</nuxt-link>
             </div>
           </div>
@@ -42,9 +42,9 @@
       <nav class="">
         <div class="ml-12">
           <nuxt-link @click.native="showMobileMenu = false" to="/" class="mt-1 block px-3 py-2 rounded-md text-2xl font-h2 text-black hover:underline focus:outline-none transition duration-150 ease-in-out">Home</nuxt-link>
-          <nuxt-link @click.native="showMobileMenu = false" to="/section1" class="mt-1 block px-3 py-2 rounded-md text-2xl font-h2 text-black hover:underline focus:outline-none transition duration-150 ease-in-out">Section 1</nuxt-link> 
-          <nuxt-link @click.native="showMobileMenu = false" to="/section2" class="mt-1 block px-3 py-2 rounded-md text-2xl font-h2 text-black hover:underline focus:outline-none transition duration-150 ease-in-out">Section 2</nuxt-link> 
-          <nuxt-link @click.native="showMobileMenu = false" to="/about" class="mt-1 block px-3 py-2 rounded-md text-2xl font-h2 text-black hover:underline focus:outline-none transition duration-150 ease-in-out">About</nuxt-link>
+          <nuxt-link @click.native="showMobileMenu = false" to="/Episodes" class="mt-1 block px-3 py-2 rounded-md text-2xl font-h2 text-black hover:underline focus:outline-none transition duration-150 ease-in-out">Episodes</nuxt-link> 
+          <nuxt-link @click.native="showMobileMenu = false" to="/Lokis" class="mt-1 block px-3 py-2 rounded-md text-2xl font-h2 text-black hover:underline focus:outline-none transition duration-150 ease-in-out">Lokis</nuxt-link> 
+          <nuxt-link @click.native="showMobileMenu = false" to="/About" class="mt-1 block px-3 py-2 rounded-md text-2xl font-h2 text-black hover:underline focus:outline-none transition duration-150 ease-in-out">About</nuxt-link>
         </div>
       </nav>
     </div>

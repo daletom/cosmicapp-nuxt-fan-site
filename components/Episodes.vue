@@ -5,7 +5,7 @@
       v-for="article in data" 
       :key="article.id"
     >
-    <nuxt-link :to="'/section1/' + article.slug">
+    <nuxt-link :to="'/episodes/' + article.slug">
       <ix-img
         :src="article.metadata.heroimage.imgix_url"
         width="500"

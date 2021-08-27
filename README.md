@@ -102,7 +102,73 @@ At this point, you actually don't need to make any additional changes.  You can 
 
 ## Customizations to Routes
 
+The routes are set-up for three paths in the pages folder of your nuxt-app.  They are set up as:
 
+* Episodes
+* Lokis
+* About
+
+Depending on how many objects you created in your homes bucket and what they are called, you should modify these.  In my example, I called them Lokis, Episodes, and About in my Cosmic bucket, which is why I changed the names of the folders in my pages section to be identical to those.  
+
+If you open one of those folders (I opened episodes) you will see a index.vue and a _id.vue.  The _id.vue is a dynamic route, for each of the individual objects I created in my episodes bucket, there will be a dynamic route to match those. No customization needs to happen with the _id.vue.  
+
+For the index.vue, this would be the episodes page, which displays all of the objects you added to the episodes bucket.  In the index.vue of the episodes folder, you will notice it is pretty empty. 
+
+```
+<template>
+  <div class="p-4">
+    <Episodes v-bind:data="getObjects.objects" />
+  </div>
+</template>
+
+<script>
+import getObjects from '../../apollo/queries/allEpisodes.gql'
+
+export default {
+  apollo: {
+    getObjects: {
+      prefetch: true,
+      query: getObjects,
+    }
+  },
+};
+</script>
+```
+
+In the template, I am simply injecting a component called Episodes.vue.  In the script, I am referencing one of my GraphQL queries from Apollo. This is how I prefetch the data from that query to display the content in the Episodes component.  Let's have a look in the components folder at the Episodes.vue component.  
+
+```
+<template>
+  <div class="flex flex-wrap">
+    <div
+      class="p-4 article"
+      v-for="article in data" 
+      :key="article.id"
+    >
+    <nuxt-link :to="'/episodes/' + article.slug">
+      <ix-img
+        :src="article.metadata.heroimage.imgix_url"
+        width="500"
+        height="281"
+        fixed
+        loading="lazy"
+      />
+    </nuxt-link>
+      <p class="p-2" v-html="article.content"></p>
+    </div>
+  </div>
+</template>
+```
+
+I am using Vue's `v-for` functionality to loop through each of the results from the episodes bucket we made in Cosmic. For each result, it will display an image and the content. It is wrapped in the `nuxt-link` which is a simple nuxt component that pre-generates a route so it loads instantly when you click it.  Now if you created a different object in your homes that wasn't called episodes, you would want to modify one item here.  
+
+```
+<nuxt-link :to="'/episodes/' + article.slug">
+```
+
+The route is going to something called `/episodes/`.  But if you changed the name of the folder in pages, then you will want this to match that. That way if you click on an object, it will go to that same route.  
+
+For the image, I am using a Vue SDK from imgix to generate a responsive design which is already installed in the template.  That is why it says `ix-img` instead of `img`.  I am calling the heroimage that we created in the metadata of our bucket in cosmic by referencing this `article.metadata.heroimage.imgix_url`.  This isn't anything you need to change, as long as you also used the template bucket with the heroimage title for your images.  If you created something customer yourself, you would just need to change the heroimage part.  These images are going to be displayed at 500 x 281, which is determind by the height and width I added.  I chose for these images to be fixed.  The Vue SDK will create a srcset for each image that will create several different sizes to intelligently matcth the device pixel ratio of a user.  This is nothing you need to change or worry about. If you want different sizes, then just change the width and height here.  The loading lazy is also the native lazy loading for Chrome web browsers, again, nothing you need to change.
 
 ## Build Setup
 
