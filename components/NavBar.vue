@@ -5,8 +5,8 @@
       <div class="flex items-center">
         <div class="flex-shrink-0">
           <nuxt-link to="/" class="flex items-center text-tomorange">
-            <NuxtLogo class="block lg:hidden "/>
-            <NuxtLogo class="hidden lg:block "/>
+            <Logo class="block lg:hidden "/>
+            <Logo class="hidden lg:block "/>
           </nuxt-link>
         </div>
         <div class="hidden sm:block sm:ml-6">

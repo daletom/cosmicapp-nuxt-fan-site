@@ -3,7 +3,7 @@
     bucket_slug: "",
     read_key: "",
     input: {
-        query: { type: "" }
+        query: { type: "homes" }
     }
   ) {
 		objects {
