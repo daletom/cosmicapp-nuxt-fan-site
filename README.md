@@ -1,5 +1,5 @@
 # cosmic-nuxt-fan-site
-This is a Nuxt App built using Cosmic as it's Headless CMS.  It utilizes Apollo to access the Cosmic v3 Graph QL.  It uses Tailwind CSS as the css framework.  It utilizes Cosmic's built integration with imgix to build out responsive images as well as advances use cases such as gif to mp4, og image optimization, and blending with text.
+This is a Nuxt App built using Cosmic as it's Headless CMS.  It utilizes Apollo to access the Cosmic v3 Graph QL.  It uses Tailwind CSS as the css framework.  It utilizes Cosmic's built integration with imgix to build out responsive images as well as advanced use cases for og image optimization, and blending with text.  There is a [tutorial video](https://youtu.be/YYMptR7Fpn4) which was done by Tony Spiro (CEO at Cosmic) and Tom Dale (Head of Customer Success at imgix).  There is also an accompanying App in the [Cosmic Marketplace](https://www.cosmicjs.com/apps/nuxt-fan-site-with-responsive-images). Live [demo](https://cosmic-loki.vercel.app/) is here.
 
 ## Adding Content to Cosmic
 
@@ -170,21 +170,83 @@ The route is going to something called `/episodes/`.  But if you changed the nam
 
 For the image, I am using a Vue SDK from imgix to generate a responsive design which is already installed in the template.  That is why it says `ix-img` instead of `img`.  I am calling the heroimage that we created in the metadata of our bucket in cosmic by referencing this `article.metadata.heroimage.imgix_url`.  This isn't anything you need to change, as long as you also used the template bucket with the heroimage title for your images.  If you created something customer yourself, you would just need to change the heroimage part.  These images are going to be displayed at 500 x 281, which is determind by the height and width I added.  I chose for these images to be fixed.  The Vue SDK will create a srcset for each image that will create several different sizes to intelligently matcth the device pixel ratio of a user.  This is nothing you need to change or worry about. If you want different sizes, then just change the width and height here.  The loading lazy is also the native lazy loading for Chrome web browsers, again, nothing you need to change.
 
-## Build Setup
+## The ix-img from imgix
 
-```bash
-# install dependencies
-$ yarn install
+I am actually using the [Vue SDK](https://github.com/imgix/vue-imgix) from imgix. I have installed it already in this repo.  You can see the settings for it in my plugins folder:
 
-# serve with hot reload at localhost:3000
-$ yarn dev
+```
+import Vue from 'vue';
+import VueImgix from 'vue-imgix';
 
-# build for production and launch server
-$ yarn build
-$ yarn start
-
-# generate static project
-$ yarn generate
+Vue.use(VueImgix, {
+    domain: "imgix.cosmicjs.com",
+    defaultIxParams: {
+        auto: 'format,compress',
+    },
+})
 ```
 
+There is nothing needed to be changed here, but simply showing the idea that I am importing this Vue plugin into Nuxt. I am declaring what imgix url to use, which is the url provided by Cosmic in this instance.  To finish registering this plugin, you will want to go into the nuxt.config.js and add it to the plugins section as well.
 
+```
+plugins: ['~/plugins/vue-imgix.js'
+  ],
+```
+
+Now that the plugin is set up, you can use `<ix-img />` instead of `<img />` tags.  Now you have the option to generate various types of responsive images with srcsets as well as easily adding imgix parameters.  From one example in my Episodes.vue Component, you can see me creating a fixed image.  I have declared the width and heigh and then added fixed. 
+
+```
+<ix-img
+        :src="article.metadata.heroimage.imgix_url"
+        width="500"
+        height="281"
+        fixed
+        loading="lazy"
+      />
+```
+
+By doing this, it will generate a srcset that creates multiple versions of that same size of image with different device pixel ratios.  The browser can then choose the correct DPR image based on the device viewing the image.  It's quite important to display higher dpr images to certain devices, like mobile phones, otherwise they will end up looking blurry.  Higher DPR images also have denser pixel data, so they can withstand higher levels of compression without visually impairing the image.  That's why in the generated srcsets you can notice that the quality value decreases as the dpr value increases.  This is a great way of serving great looking performant images.  Here is an example of a srcset that would be generated:
+
+```
+<img src="https://imgix.cosmicjs.com/2a211ae0-f702-11eb-86e0-7bd854b21e10-ep5.png?ixlib=js-3.3.0&amp;auto=format%2Ccompress&amp;w=500&amp;h=281" 
+srcset="https://imgix.cosmicjs.com/2a211ae0-f702-11eb-86e0-7bd854b21e10-ep5.png?ixlib=js-3.3.0&amp;auto=format%2Ccompress&amp;w=500&amp;h=281&amp;dpr=1&amp;q=75 1x,
+https://imgix.cosmicjs.com/2a211ae0-f702-11eb-86e0-7bd854b21e10-ep5.png?ixlib=js-3.3.0&amp;auto=format%2Ccompress&amp;w=500&amp;h=281&amp;dpr=2&amp;q=50 2x,
+https://imgix.cosmicjs.com/2a211ae0-f702-11eb-86e0-7bd854b21e10-ep5.png?ixlib=js-3.3.0&amp;auto=format%2Ccompress&amp;w=500&amp;h=281&amp;dpr=3&amp;q=35 3x,
+https://imgix.cosmicjs.com/2a211ae0-f702-11eb-86e0-7bd854b21e10-ep5.png?ixlib=js-3.3.0&amp;auto=format%2Ccompress&amp;w=500&amp;h=281&amp;dpr=4&amp;q=23 4x,
+https://imgix.cosmicjs.com/2a211ae0-f702-11eb-86e0-7bd854b21e10-ep5.png?ixlib=js-3.3.0&amp;auto=format%2Ccompress&amp;w=500&amp;h=281&amp;dpr=5&amp;q=20 5x" width="500" height="281" loading="lazy">
+```
+
+All I had to do was install the Vue SDK and change the img tag to an ix-img, a very easy way to generate great srcsets for my images.  
+
+## Optimizing my OG images
+
+Something you always want users to do is to share content from your website.  This is a great opportunity for your content to be viewed by many other users that may have not found it.  I love it when shared content is customized in some way to stand out.  One way I love to do this is by optimizing the og:image and twitter:image.  You can add watermarks or logos of your website to these images, maybe you can even overlay text on a nice overlay from your article on the image.  
+
+That's going to be a lot of time in figma or photoshop to create all these customized images to be shared.  But wait, all of the images are on imgix.  imgix is practically a photoshop on the fly, with tons of APIs to add custom watermarks, blends, text, etc.  I can actually create a nice function or component in Nuxt to programmatically append the metadata to each of the og:images for every article.  If you go to the episode.vue component, you will see a component I reference their called `<Social Head />`. I got this idea from a Nuxt tutorial.  All this component is doing is passing the title, content, and image url from Cosmic to the Social head component.
+
+```
+<SocialHead
+      :title="article.title"
+      :description="article.content"
+      :image="article.metadata.heroimage.imgix_url"
+      />
+```
+
+Now if you go to the actual SocialHead.vue component file, you will see that it is generated the head metadata.  it will add the title and content to the appropriate og and twitter fields for each article.  I am also adding some further imgix APIs to the og:image and twitter:image.  For the twitter card, I want a 450 x 450 image.  I am including the website logo in the bottom right as well as a watermark.  Then I am also adding a dark gradient to the image, so I can overlay the name of the article as text on the image.
+
+```
+{
+            hid: 'twitter:image',
+            name: 'twitter:image',
+            content: this.image + "?w=450&ar=1:1&fit=crop&crop=faces,edges&blend-size=inherit&blend-mode=multiply&blend=https://demos.imgix.net/dark-ellipse-gradient.ai?fm=png%20w=450&txt-align=middle,center&txt-size=72&mark64=aHR0cHM6Ly9pbWdpeC5jb3NtaWNqcy5jb20vYmViZDVlZDAtZjcyZS0xMWViLWExNzEtNzFkOWRiMGVlNDk2LWxva2lsb2dvLmdpZj93PTMwMCZoPTEyMCZmaXQ9Y3JvcCZmcmFtZT02&txt-fit=max&txt-pad=20&txt-color=white&txt=" + this.title
+            },
+```
+
+Once you publish your app, you can test the pages to see their social share content is working.  I like to use the [Twitter Validator](https://cards-dev.twitter.com/validator) to do this.  If you enter a url from my demo site, like this one: https://cosmic-loki.vercel.app/episodes/journey-into-mystery, you will then see the twitter card I created:
+
+<img src="https://tom.imgix.net/twitter_validator.png?w=600&auto=format">
+
+
+## Conclusion
+
+Not only has this been a really fun site template to make, it's been great to further explore some advanced ways to use imgix to optimize the images.  it is truly a powerful tool to have already included with your Cosmic accounts.  Remember, there is a [tutorial video](https://youtu.be/YYMptR7Fpn4) which was done by Tony Spiro (CEO at Cosmic) and Tom Dale (Head of Customer Success at imgix).  There is also an accompanying App in the [Cosmic Marketplace](https://www.cosmicjs.com/apps/nuxt-fan-site-with-responsive-images).  I hope you do fun things with this app and my suggestions and look forward to helping with anything else you might need.
